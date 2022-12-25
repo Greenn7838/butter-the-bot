@@ -1,7 +1,8 @@
 require('dotenv').config(); // dotenv
 process.env.TZ = 'Asia/Ho_Chi_Minh'
 const Discord = require('discord.js');
-const { REST } = require('@discordjs/rest')
+const { REST } = require('@discordjs/rest');
+const mineflayer = require('mineflayer');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const { Routes } = require('discord-api-types/v9');
@@ -13,7 +14,7 @@ const client = new Discord.Client({
     users: false
   },
 });
-
+module.exports = client;
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 client.categories = new Discord.Collection();
@@ -21,9 +22,6 @@ client.interactions = new Discord.Collection();
 const slashCommands = [];
 
 
-let cmdCount = 0;
-let eventCount = 0;
-let slashCount = 0;
 
 // command handler
 fs.readdirSync('./commands/').forEach(dir => {
@@ -31,14 +29,12 @@ fs.readdirSync('./commands/').forEach(dir => {
   for (const file of commands) {
     const pull = require(`./commands/${dir}/${file}`);
     if (pull.name) {
-      cmdCount++
       client.commands.set(pull.name, pull);
     } else {
       continue;
     }
     if (pull.aliases && Array.isArray(pull.aliases)) pull.aliases.forEach(alias => client.aliases.set(alias, pull.name))
   }
-  console.log(`${cmdCount} lệnh đã hoạt động`);
 });
 
 // event handler
@@ -48,9 +44,7 @@ for (const f of files) {
   const eventName = f.substring(0, f.indexOf('.js'));
   const event = require(`./events/${f}`);
   client.on(eventName, event.bind(null, client));
-  eventCount++;
 }
-console.log(`${eventCount} sự kiện của bot đã hoạt động`)
 
 // "/" handler
 fs.readdirSync('./slashCommands/').forEach(dir => {
@@ -83,5 +77,9 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
   useNewUrlParser: true
 }).then(() => console.log('MongoDB connected!'));
+
+const {createBot} = require('./mcbot');
+createBot(client);
+
 
 client.login(process.env.DISCORD_TOKEN);
