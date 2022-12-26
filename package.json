@@ -11,11 +11,16 @@
   "license": "ISC",
   "dependencies": {
     "@discordjs/builders": "^0.15.0",
+    "@discordjs/opus": "^0.9.0",
     "@discordjs/rest": "^0.5.0",
+    "@discordjs/voice": "^0.14.0",
     "ascii-table": "^0.0.9",
     "discord-api-types": "^0.34.0",
-    "discord.js": "^13.9.2",
+    "discord-tts": "^1.2.2",
+    "discord.js": "^13.6.0",
     "dotenv": "^16.0.1",
+    "ffmpeg-static": "^5.1.0",
+    "google-tts-api": "^2.0.2",
     "minecraft-data": "^3.15.0",
     "minecraft-server-util": "^5.2.10",
     "mineflayer": "^4.5.0",
@@ -26,7 +31,6 @@
     "prismarine-viewer": "^1.23.0",
     "prismarine-windows": "^2.4.4"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Greenn7838/butter-the-bot.git"

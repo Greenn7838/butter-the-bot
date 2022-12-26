@@ -13,8 +13,8 @@ var livechatId = config.livechat;
     function createBot(client) {
         const bot = mineflayer.createBot({
             host: process.env.MC_IP,
-            port: 25565,
-            username: process.env.MC_USERNAME
+            username: process.env.MC_USERNAME,
+            version: '1.16.5',
         });
         /**
          *            2Y2C-Login-API
@@ -48,9 +48,17 @@ var livechatId = config.livechat;
             bot.clickWindow(p4, 0, 0);
         
             // Cho bot vào server
-            setTimeout(() => { bot.chat('/anarchyvn') }, 5*1000); // Dùng /2y2c sau khi login xong
+            setTimeout(() => {
+                const embed = new MessageEmbed().setColor('GREEN').setTitle('Đã nhập `/anarchyvn`')
+                bot.chat('/anarchyvn');
+                client.channels.cache.get(livechatId).send({ embeds: [embed] })
+            }, 5*1000); // Dùng /anarchyvn sau khi login xong
         
-            setTimeout(() => { bot.clickWindow(13,0,0) }, 10*1000); // Sau đó bấm vào khung kia để vào server
+            setTimeout(() => {
+                const embed = new MessageEmbed().setColor('YELLOW').setTitle('Đã click `Chuyển Server`');
+                bot.clickWindow(13,0,0);
+                client.channels.cache.get(livechatId).send({ embeds: [embed] })
+            }, 5*1000); // Sau đó bấm vào khung kia để vào server
         });
         
         bot.on('end', () => { // Log khi bot end
@@ -59,12 +67,9 @@ var livechatId = config.livechat;
 
         bot.on('message', async (msg) => { // Log message từ chat game
             console.log(msg.toString());
-            var guild = client.guilds.cache.get(guildId);
-            var channel = guild.channels.cache.get(livechatId);
-            const embed = new MessageEmbed()
-                .setColor('AQUA')
-                .setDescription(msg.toString());
-            channel.send('```' + msg.toString() + '```');
+            const embed = new MessageEmbed();
+            embedState(msg, embed);
+            client.channels.cache.get(livechatId).send({ embeds: [embed] })
         });
         
 
@@ -73,9 +78,30 @@ var livechatId = config.livechat;
             const channel = message.channel;
             if (channel.id === livechatId) {
                 message.react('✅');
-                bot.chat(`[${message.author.tag}] ` + message.content);
+                bot.chat(`<${message.author.tag}> ` + message.content);
             } else return
         })
+
+    /**
+     * 
+     * @param {String[]} msg 
+     * @param {MessageEmbed} embed 
+     */
+    async function embedState(msg, embed) {
+        if (msg.toString() === ("Vị trí hàng chờ: " + /^[0-9]*$/)) {
+            embed.setColor('GOLD')
+                .setTitle(msg.toString());
+        } else if (msg.toString().startsWith("<[Donator]")) {
+            embed.setColor('PURPLE')
+                .setDescription(msg.toString());
+        } else if (msg.toString().startsWith("[ANARCHYVN]")) {
+            embed.setColor('RED')
+                .setTitle(msg.toString())
+        } else {
+            embed.setColor('AQUA').setDescription(msg.toString())
+        }
+    }
+
     }
 
 module.exports = { createBot }

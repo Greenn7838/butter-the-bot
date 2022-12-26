@@ -17,7 +17,7 @@ const client = new Discord.Client({
 module.exports = client;
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
-client.categories = new Discord.Collection();
+client.categories = fs.readdirSync('./commands')
 client.interactions = new Discord.Collection();
 const slashCommands = [];
 
