@@ -10,15 +10,18 @@ module.exports = {
      * @param {String[]} args 
      */
     run: async(client, message, args) => {
-        message.reply('Bot đã chuyển sang "/" slash commands');
-        message.reply('Đang check ping...')
+        const embed = new Discord.MessageEmbed()
+            .setColor('YELLOW')
+            .setDescription('Đang check ping...');
+        message.reply({ embeds: [embed] })
             .then((m) => {
                 let ping = m.createdTimestamp - message.createdTimestamp;
-                m.edit(
+                embed.setDescription(
                     `Ping của Bot\n` +
                     `> Ping phản hồi (Reply ping): \`${ping}ms\`\n` +
                     `> Ping Discord API (Websocket ping): \`${client.ws.ping}ms\`\n`
                 )
+                m.edit({ embeds: [embed] })
             })
     }
 }

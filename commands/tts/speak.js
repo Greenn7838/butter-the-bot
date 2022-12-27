@@ -1,8 +1,6 @@
 const Discord = require('discord.js');
-const { getAudioUrl } = require('google-tts-api');
 const discordTTS = require('discord-tts');
-const { joinVoiceChannel, createAudioResource, createAudioPlayer, StreamType, entersState, AudioPlayerStatus, VoiceConnectionStatus, AudioPlayer, PlayerSubscription } = require('@discordjs/voice');
-
+const { AudioPlayer, createAudioResource, StreamType, entersState, VoiceConnectionStatus, joinVoiceChannel } = require('@discordjs/voice');
 module.exports = {
     name: 'speak',
     aliases: ['say', 's'],
@@ -16,14 +14,13 @@ module.exports = {
      * @param {String[]} args 
      */
     run: async(client, message, args) => {
-        if (!args[0]) return message.reply('Bạn phải nhập nội dung để bot có thể nói!!');
+        let voiceConnection;
+        let audioPlayer = new AudioPlayer();
+        if (!args[0]) return message.reply('Bạn phải nhập nội dung để bot nói!!');
         const string = args.join(' ');
         if (string.length > 200) return message.reply('Bạn đã nhập quá 200 kí tự!!');
         
-        let voiceConnection;
-        let audioPlayer = new AudioPlayer();
-
-        const stream=discordTTS.getVoiceStream("hello text to speech world");
+        const stream=discordTTS.getVoiceStream(string, { lang: 'vi', slow: false });
         const audioResource=createAudioResource(stream, {inputType: StreamType.Arbitrary, inlineVolume:true});
         if(!voiceConnection || voiceConnection?.status===VoiceConnectionStatus.Disconnected){
             voiceConnection = joinVoiceChannel({
@@ -33,10 +30,14 @@ module.exports = {
             });
             voiceConnection=await entersState(voiceConnection, VoiceConnectionStatus.Connecting, 5_000);
         }
-        
-        if(voiceConnection.status===VoiceConnectionStatus.Ready){
-            voiceConnection.subscribe(audioPlayer);
-            audioPlayer.play(audioResource);
+        try {
+            if(voiceConnection.status===VoiceConnectionStatus.Connected){
+                voiceConnection.subscribe(audioPlayer);
+                audioPlayer.play(audioResource);
+            }
+        } catch (error) {
+            console.error(error)
         }
+        
     }
 }

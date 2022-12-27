@@ -7,7 +7,7 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const { Routes } = require('discord-api-types/v9');
 const client = new Discord.Client({
-  intents: 33295,
+  intents: 40847,
   allowedMentions: {
     repliedUser: false,
     roles: false,
@@ -73,10 +73,10 @@ fs.readdirSync('./slashCommands/').forEach(dir => {
     })
 });
 
-mongoose.connect(process.env.MONGO_URI, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true
-}).then(() => console.log('MongoDB connected!'));
+// mongoose.connect(process.env.MONGO_URI, {
+//   useUnifiedTopology: true,
+//   useNewUrlParser: true
+// }).then(() => console.log('MongoDB connected!'));
 
 const {createBot} = require('./mcbot');
 createBot(client);

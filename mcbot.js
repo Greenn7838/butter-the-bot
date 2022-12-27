@@ -4,7 +4,6 @@ const mineflayer = require('mineflayer');
 const tpsPlugin = require('mineflayer-tps')(mineflayer);
 const config = require('./config.json');
 const Discord = require('discord.js');
-var guildId = config.guildId;
 var livechatId = config.livechat;
     /**
      * 
@@ -74,11 +73,12 @@ var livechatId = config.livechat;
         
 
         client.on('messageCreate', async(message) => {
+            const randomNum = Math.random() * 1000;
             if (message.author.bot) return;
             const channel = message.channel;
             if (channel.id === livechatId) {
                 message.react('✅');
-                bot.chat(`<${message.author.tag}> ` + message.content);
+                bot.chat(`> <${message.author.tag}> ${message.content} [${randomNum}]`);
             } else return
         })
 
