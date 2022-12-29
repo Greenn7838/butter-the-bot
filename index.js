@@ -7,6 +7,7 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const { Routes } = require('discord-api-types/v9');
 const client = new Discord.Client({
+  restRequestTimeout: 60000,
   intents: 40847,
   allowedMentions: {
     repliedUser: false,

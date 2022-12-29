@@ -97,7 +97,20 @@ var livechatId = config.livechat;
         } else if (msg.toString().startsWith("[ANARCHYVN]")) {
             embed.setColor('RED')
                 .setTitle(msg.toString())
-        } else {
+        } else if (msg.toString() === 'Donate bằng thẻ cào để duy trì server, dùng lệnh /napthe và lệnh /muarank') {
+            embed.setColor('#ffff80')
+                .setDescription('💸' + msg.toString())
+        } else if (msg.toString() === 'Click vào đây để vote cho server AnarchyVN') {
+            embed.setColor('#4dffff')
+                .setDescription(msg.toString());
+        } else if (msg.toString() === 'Click vào đây để tham gia server discord AnarchyVN') {
+            embed.setColor('#3333ff')
+                .setTitle(`${msg.toString()}[https://discord.gg/6jpcR8GUtu]`)
+        } else if (msg.toString() === 'Hãy donate để giúp server duy trì bạn nhé!') {
+            embed.setColor('#cc33ff')
+                .setDescription(msg.toString());
+        }
+        else {
             embed.setColor('AQUA').setDescription(msg.toString())
         }
     }
